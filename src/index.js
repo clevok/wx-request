@@ -36,7 +36,7 @@ request.interceptors.response.fail.use(async (ctx) => {
  * @param {object}  options 扩展属性
  * @param {boolean} options.baseUrl
  * @param {string}  [options.methods='POST'] methods
- * @param {string}  [options.header={...}] header
+ * @param {string}  [options.header={}] header
  * @param {boolean} [options.dataType=json] dataType
  * @param {boolean} [options.noBaseUrl=false] 本地扩展
  */

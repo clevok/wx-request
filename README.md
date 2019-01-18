@@ -199,6 +199,8 @@ interceptors.request[] 传入多个 方法或Promise, 请求前的ctx包含了{u
 
 等待2秒后 才打印 3, finsh需手动执行, 表示该队列执行完成, 释放, 执行下一个方法
 
+
+
 2. message.js (发布订阅, 从腾讯视频大大那边直接拿来用)
 
 ```js

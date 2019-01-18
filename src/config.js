@@ -1,5 +1,5 @@
 exports.config = {
-    baseUrl: 'https://baidu.com',
+    baseUrl: 'https://fhdowx.xyy001.com',
     header: {
         'content-type': 'application/x-www-form-urlencoded'
     },
@@ -30,12 +30,11 @@ exports.interceptors = {
 
     // 请求之后
     response: [
-        // 将我注释掉看看
         async (ctx) => {
             return ctx.data;
         },
         async (ctx) => {
-            if (ctx.rcode !== 0 && ctx.scode !== 0) {
+            if (ctx.rcode !== 0 || ctx.scode !== 0) {
                 return Promise.reject(ctx);
             }
         }
