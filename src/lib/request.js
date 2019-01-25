@@ -44,6 +44,12 @@ const request = function (url, data = {}, options = {}) {
     return start;
 };
 
+['get', 'put', 'post', 'delete'].forEach(type => {
+    request[type] = (url, data, options={}) => {
+        return request(url, data, Object.assign(options, {method: type}));
+    }
+});
+
 request.interceptors = {};
 request.interceptors.request = {
     list: [],

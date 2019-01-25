@@ -35,6 +35,10 @@
      */
     let request = requeir('./src/index');
 
+        request.get('/system/getConfig.do', {time: 1}, {});
+        request.put('/system/getConfig.do', {time: 1}, {});
+        request.post('/system/getConfig.do', {time: 1}, {});
+
             // 直接抛弃请求
         request('/system/getConfig.do', {time: 1}, {}).abort();
         
