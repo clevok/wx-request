@@ -3,6 +3,9 @@
 
 
 ## 为什么要封装
+主要是为了更加严苛的控制请求数, 以及使用async 来控制请求, 要求请求对象是 promise对象,
+但目前使用的尽管是promise对象, 抛弃请求却十分的不方便
+有的时候需要离开详情页, 详情页的请求也希望全部抛弃, 因此自己封装了
 
 ### 优势
 
@@ -32,9 +35,29 @@
      */
     let request = requeir('./src/index');
 
-    request('/index.php', {name: 666})
-    request('/index.php', {name: 666})
-    request('/index.php', {name: 777}, {methods: 'GET'}).abort();
+            // 直接抛弃请求
+        request('/system/getConfig.do', {time: 1}, {}).abort();
+        
+        // 发送出去后抛弃请求
+        let request1 = request('/system/getConfig.do', {time: 2}, {});
+        setTimeout(() => {
+            request1.abort();
+        }, 30);
+
+        request('/system/getConfig.do', {time: 3}, {});
+        request('/system/getConfig.do', {time: 4}, {});
+        request('/system/getConfig.do', {time: 5}, {noToken: true});
+
+        // 队列中被直接抛弃
+        let request2 = request('/system/getConfig.do', {time: 6}, {});
+        setTimeout(() => {
+            request2.abort();
+        }, 30);
+
+        request('/system/getConfig.do', {time: 7}, {});
+        request('/system/getConfig.do', {time: 8}, {}).then(()=> {
+            
+        });
 
 ```
 
