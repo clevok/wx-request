@@ -22,8 +22,8 @@ exports.interceptors = {
     request: [
         async (ctx) => {
             let {options} = ctx;
-            if (options.noToken) {
-                ctx.data.token = '';
+            if (!options.noToken) {
+                ctx.data.token = 666;
             }
         }
     ],

@@ -8,7 +8,7 @@ const { config } = require('../config');
  * @param {object}  data 表单内容
  *
  * @param {object}  options 扩展属性
- * @param {string}  [options.methods='POST'] methods
+ * @param {string}  [options.method='POST'] method
  * @param {boolean} [options.noToken=false] 不需要token
  * @param {boolean} [options.noBaseUrl=false] 不需要baseUrl
  * @returns

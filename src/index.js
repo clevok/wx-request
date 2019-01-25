@@ -3,13 +3,13 @@ const { config, interceptors } = require('./config');
 
 request.interceptors.request.use(
     async(ctx) => {
-        ctx.options = {
+        ctx.options = Object.assign({
             baseUrl: ctx.options.baseUrl || config.baseUrl,
-            methods: ctx.options.methods || config.methods || 'POST',
+            method: ctx.options.method || config.method || 'POST',
             header: ctx.options.header || config.header || {},
             dataType: ctx.options.dataType || config.dataType || 'json',
             noBaseUrl: false
-        };
+        }, ctx.options);
     },
     ...interceptors.request,
     async (ctx) => {
@@ -35,7 +35,7 @@ request.interceptors.response.fail.use(async (ctx) => {
  *
  * @param {object}  options 扩展属性
  * @param {boolean} options.baseUrl
- * @param {string}  [options.methods='POST'] methods
+ * @param {string}  [options.method='POST'] method
  * @param {string}  [options.header={}] header
  * @param {boolean} [options.dataType=json] dataType
  * @param {boolean} [options.noBaseUrl=false] 本地扩展

@@ -11,10 +11,13 @@ function wxRequest (url, data={}, options = {}) {
         request = wx.request({
             url: options.baseUrl+url,
             data,
-            methods: options.methods || 'POST',
+            method: options.method || 'POST',
             dataType: options.dataType || 'json',
             header: options.header || {},
             success (res) {
+                if (res.statusCode !== 200) {
+                    return reject(res);
+                }
                 return resolve(res);
             },
             fail (res) {
