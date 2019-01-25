@@ -36,9 +36,9 @@ const request = function (url, data = {}, options = {}) {
     start.abort = async function () {
         abort = true;
         if (!result) return;
-        if ('abort' in result) {
+        if (typeof result.abort === 'function') {
             result.abort();
-        }
+        };
         result = null;
     };
     return start;

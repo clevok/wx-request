@@ -30,9 +30,9 @@ function wxRequest (url, data={}, options = {}) {
     });
     pro.abort = () => {
         if (!request) return;
-        if ('abort' in request) {
+        if (typeof request.abort === 'function') {
             request.abort();
-        }
+        };
         request = null;
     };
     return pro;
@@ -63,12 +63,13 @@ function LoopRequest () {
         };
     });
     pro.abort = () => {
-        if (request) return request.abort();
-
         if (!result) return;
-        if ('abort' in result) {
+
+        // 已经 进入请求, 不需要 result的remove了
+        if (request) return request.abort();
+        if (typeof result.remove === 'function') {
             result.remove();
-        }
+        };
         result = null;
     };
     return pro;

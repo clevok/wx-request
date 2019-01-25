@@ -68,6 +68,7 @@ Producer.prototype.put = function (event) {
 Producer.prototype.abort = function (event) {
     for( let i = 0; i < this._loopNum; i++) {
         if (this._loop[i] === event) {
+            this._loopNum--;
             return this._loop.splice(i, 1);
         }
     }
