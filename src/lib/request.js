@@ -19,11 +19,11 @@ const request = function (url, data = {}, options = {}) {
     };
     let result = null;
     let abort = null; // 为了及时抛出请求
-    
+
     let start = new Promise(async (resolve, reject) => {
         await request.interceptors.request.done(ctx);
-        if (abort) return resolve(request.interceptors.response.fail.done(config.response.abort||{errMsg: 'request:fail abort'}));
-        
+        if (abort) return resolve(request.interceptors.response.fail.done(config.response.abort || {errMsg: 'request:fail abort'}));
+
         result = wxRequest(ctx.url, ctx.data, ctx.options);
         try {
             result = await result;
@@ -45,9 +45,9 @@ const request = function (url, data = {}, options = {}) {
 };
 
 ['get', 'put', 'post', 'delete'].forEach(type => {
-    request[type] = (url, data, options={}) => {
+    request[type] = (url, data, options = {}) => {
         return request(url, data, Object.assign(options, {method: type}));
-    }
+    };
 });
 
 request.interceptors = {};

@@ -24,7 +24,7 @@ request.interceptors.response.success.use(...interceptors.response);
  * 监听请求失败, 请求抛出
  */
 request.interceptors.response.fail.use(async (ctx) => {
-    return Promise.reject(ctx);
+    return Promise.reject(Object.assign(ctx, {rcode: 1, scode: -2}));
 });
 
 /**
@@ -41,3 +41,4 @@ request.interceptors.response.fail.use(async (ctx) => {
  * @param {boolean} [options.noBaseUrl=false] 本地扩展
  */
 module.exports = request;
+export default request;

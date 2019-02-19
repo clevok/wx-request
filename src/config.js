@@ -1,3 +1,5 @@
+import wepy from 'wepy';
+
 exports.config = {
     baseUrl: 'https://fhdowx.xyy001.com',
     header: {
@@ -23,7 +25,7 @@ exports.interceptors = {
         async (ctx) => {
             let {options} = ctx;
             if (!options.noToken) {
-                ctx.data.token = 666;
+                ctx.data.token = wepy.$instance.globalData.token;
             }
         }
     ],

@@ -70,7 +70,6 @@ Message.prototype.assign = function (target) {
         };
     });
 }
-
 /**
  *  Global Message Central
  **/
