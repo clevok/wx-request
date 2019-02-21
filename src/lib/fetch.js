@@ -4,12 +4,12 @@ const loop = new (require('./loop'))(config.maxLink);
 /**
  * 请求
  */
-function wxRequest (url, data={}, options = {}) {
+function wxRequest (url, data = {}, options = {}) {
     let request = null;
 
     let pro = new Promise((resolve, reject) => {
         request = wx.request({
-            url: options.baseUrl+url,
+            url: options.baseUrl + url,
             data,
             method: options.method || 'POST',
             dataType: options.dataType || 'json',
@@ -22,7 +22,7 @@ function wxRequest (url, data={}, options = {}) {
             },
             fail (res) {
                 if (res.errMsg === 'request:fail abort') {
-                    res = config.response.abort||{errMsg: 'request:fail abort'};
+                    res = config.response.abort || {errMsg: 'request:fail abort'};
                 }
                 return reject(res);
             },
@@ -48,8 +48,8 @@ function LoopRequest () {
     let result = null;
     let request = null;
 
-    let pro = new Promise(( resolve, reject ) => {
-        result = loop.put(async (finsh)=> {
+    let pro = new Promise((resolve, reject) => {
+        result = loop.put(async (finsh) => {
             request = wxRequest(...arguments);
             try {
                 request = await request;
@@ -62,7 +62,7 @@ function LoopRequest () {
         });
         result.remove = () => {
             result.abort();
-            return reject(config.response.abort||{errMsg: 'request:fail abort'});
+            return reject(config.response.abort || {errMsg: 'request:fail abort'});
         };
     });
     pro.abort = () => {

@@ -15,7 +15,7 @@ const { config } = require('../config');
  */
 const request = function (url, data = {}, options = {}) {
     let ctx = {
-        url, data, options
+        url, data: data || {}, options: options || {}
     };
     let result = null;
     let abort = null; // 为了及时抛出请求
@@ -31,6 +31,7 @@ const request = function (url, data = {}, options = {}) {
             result = null;
             return resolve(request.interceptors.response.fail.done(error));
         }
+
         return resolve(request.interceptors.response.success.done(result));
     });
     start.abort = async function () {
