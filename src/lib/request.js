@@ -22,8 +22,10 @@ const request = function (url, data = {}, options = {}) {
 
     let start = new Promise(async (resolve, reject) => {
         await request.interceptors.request.done(ctx);
-        if (abort) return resolve(request.interceptors.response.fail.done(config.response.abort || {errMsg: 'request:fail abort'}));
-
+        if (abort) {
+            return resolve(request.interceptors.response.fail.done(config.response.abort));
+        }
+        
         result = wxRequest(ctx.url, ctx.data, ctx.options);
         try {
             result = await result;
@@ -39,7 +41,7 @@ const request = function (url, data = {}, options = {}) {
         if (!result) return;
         if (typeof result.abort === 'function') {
             result.abort();
-        };
+        }
         result = null;
     };
     return start;

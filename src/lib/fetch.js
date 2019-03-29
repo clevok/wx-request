@@ -22,7 +22,7 @@ function wxRequest (url, data = {}, options = {}) {
             },
             fail (res) {
                 if (res.errMsg === 'request:fail abort') {
-                    res = config.response.abort || {errMsg: 'request:fail abort'};
+                    res = config.response.abort;
                 }
                 return reject(res);
             },
@@ -35,7 +35,7 @@ function wxRequest (url, data = {}, options = {}) {
         if (!request) return;
         if (typeof request.abort === 'function') {
             request.abort();
-        };
+        }
         request = null;
     };
     return pro;
@@ -62,7 +62,7 @@ function LoopRequest () {
         });
         result.remove = () => {
             result.abort();
-            return reject(config.response.abort || {errMsg: 'request:fail abort'});
+            return reject(config.response.abort);
         };
     });
     pro.abort = () => {
@@ -72,7 +72,7 @@ function LoopRequest () {
         if (request) return request.abort();
         if (typeof result.remove === 'function') {
             result.remove();
-        };
+        }
         result = null;
     };
     return pro;

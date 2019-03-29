@@ -8,7 +8,7 @@ exports.config = {
     dataType: 'json',
     maxLink: 2, // 并发请求
     response: {
-        abort: {errMsg: '取消请求', scode: -2} // 取消请求的回调对象
+        abort: {errMsg: 'request:fail abort', scode: -2} // 取消请求的回调对象
     }
 };
 
