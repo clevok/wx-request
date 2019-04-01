@@ -1,7 +1,6 @@
 const { wxRequest } = require('./fetch');
+const interceptors = require('./interceptors');
 const { config } = require('../config');
-const interceptors = require('../interceptors');
-
 
 /**
  *  网络请求

@@ -1,4 +1,6 @@
-const interceptors = {};
+const interceptors = {
+    
+};
 interceptors.request = {
     list: [],
     use () {

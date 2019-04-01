@@ -14,7 +14,17 @@ interceptors.request.use(
 );
 
 request.interceptors = interceptors;
-request.config = config;
+request.config = {
+    set(params={}) {
+        if (typeof params === 'object') {
+            Object.keys(params).forEach((e)=> {
+                if (config[e]) {
+                    config[e] = params[e];
+                }
+            });
+        }
+    }
+}
 
 /**
  *  网络请求
