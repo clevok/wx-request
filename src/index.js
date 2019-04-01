@@ -10,21 +10,26 @@ request.interceptors.request.use(
             dataType: ctx.options.dataType || config.dataType || 'json'
         }, ctx.options);
     },
-    ...interceptors.request,
+    ...interceptors.request
+);
+
+
+/**
+request.interceptors.response.success.use(
+    ...interceptors.response.success,
     async (ctx) => {
-        let {options} = ctx;
-        if (options.noBaseUrl) ctx.options.baseUrl = '';
+        return ctx;
     }
 );
 
-request.interceptors.response.success.use(...interceptors.response);
+request.interceptors.response.fail.use(
+    ...interceptors.response.fail,
+    async (ctx) => {
+        return Promise.reject(Object.assign({rcode: -1, scode: -1}, ctx));
+    }
+);
+*/
 
-/**
- * 监听请求失败, 请求抛出
- */
-request.interceptors.response.fail.use(async (ctx) => {
-    return Promise.reject(Object.assign(ctx, {rcode: 1, scode: -2}));
-});
 
 /**
  *  网络请求
@@ -36,7 +41,6 @@ request.interceptors.response.fail.use(async (ctx) => {
  * @param {string}  [options.method='POST'] method
  * @param {string}  [options.header={}] header
  * @param {boolean} [options.dataType=json] dataType
- * @param {boolean} [options.noBaseUrl=false] 本地扩展
  */
 module.exports = request;
 export default request;

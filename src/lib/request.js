@@ -53,6 +53,7 @@ const request = function (url, data = {}, options = {}) {
     };
 });
 
+
 request.interceptors = {};
 request.interceptors.request = {
     list: [],

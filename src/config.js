@@ -1,10 +1,7 @@
-import wepy from 'wepy';
-
 const config = {
     baseUrl: 'https://fhdowx.xyy001.com',
     subUrl: {
-        hello: 'https://hello.xyy001.com',
-        demo: 'https://demo.xyy001.com'
+        fhk: 'http://fhk.fhd001.com'
     },
     header: {
         'content-type': 'application/x-www-form-urlencoded'
@@ -12,8 +9,8 @@ const config = {
     dataType: 'json',
     maxLink: 8, // 并发请求
     response: {
-        abort: {errMsg: 'request:fail abort', scode: -2, rcode: -1}, // 取消请求的回调对象
-        timeout: {errMsg: 'request:fail timeout', scode: -3, rcode: -1} // 请求超时
+        abort: {errMsg: 'request:fail abort', rcode: -1, scode: -2 }, // 取消请求的回调对象
+        timeout: {errMsg: 'request:fail timeout', rcode: -1, scode: -3 } // 请求超时
     }
 };
 
@@ -21,14 +18,14 @@ const config = {
  * 拦截器
  */
 const interceptors = {
-
     /**
      * 请求之前
      * @param {boolean} [ctx.options.noToken=false] 扩展
      */
     request: [
         /**
-         * baseUrl规则
+         * 扩展 subUrl, baseUrl
+         * @return {Object} {option.baseUrl} 配置baseUrl
          * @param {Object} ctx
          */
         async (ctx) => {
@@ -41,22 +38,14 @@ const interceptors = {
                 options.baseUrl = config.baseUrl;
             }
         },
+        /**
+         * 扩展 noBaseUrl
+         * @return {Object} {option.noBaseUrl} noBaseUrl 不需要 baseUrl
+         */
         async (ctx) => {
             let {options} = ctx;
-            if (!options.noToken) {
-                ctx.data.token = wepy.$instance.globalData.token;
-            }
-        }
-    ],
-
-    // 请求之后
-    response: [
-        async (ctx) => {
-            return ctx.data;
-        },
-        async (ctx) => {
-            if (ctx.rcode !== 0 || ctx.scode !== 0) {
-                return Promise.reject(ctx);
+            if (options.noBaseUrl) {
+                options.baseUrl = '';
             }
         }
     ]
