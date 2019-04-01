@@ -6,6 +6,37 @@ import Request from './src/index';
 //     }
 // });
 
+Request.interceptors.request.use(
+    /**
+     * 扩展 subUrl, baseUrl
+     * @return {Object} {option.baseUrl} 配置baseUrl
+     * @param {Object} ctx
+     */
+    async (ctx) => {
+        let {options} = ctx;
+        if (typeof options.baseUrl === 'string') {
+            if (options.baseUrl.indexOf('http') !== 0) {
+                options.baseUrl = Request.config.subUrl[options.baseUrl] ? 
+                    Request.config.subUrl[options.baseUrl] 
+                    : Request.config.baseUrl;
+            }
+        } else {
+            options.baseUrl = Request.config.baseUrl;
+        }
+    },
+
+    /**
+     * 扩展 noBaseUrl
+     * @return {Object} {option.noBaseUrl} noBaseUrl 不需要 baseUrl
+     */
+    async (ctx) => {
+        let {options} = ctx;
+        if (options.noBaseUrl) {
+            options.baseUrl = '';
+        }
+    }
+);
+
 Request.interceptors.response.success.use(
     async (ctx) => {
         return ctx.data;
@@ -22,3 +53,5 @@ Request.interceptors.response.fail.use(
         debugger;
     }
 );
+
+export default Request;

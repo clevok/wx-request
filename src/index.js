@@ -1,7 +1,8 @@
 const request = require('./lib/request');
-const { config, interceptors } = require('./config');
+const config = require('./config');
+const interceptors = require('./lib/interceptors');
 
-request.interceptors.request.use(
+interceptors.request.use(
     async(ctx) => {
         ctx.options = Object.assign({
             baseUrl: ctx.options.baseUrl || config.baseUrl,
@@ -9,27 +10,11 @@ request.interceptors.request.use(
             header: ctx.options.header || config.header || {},
             dataType: ctx.options.dataType || config.dataType || 'json'
         }, ctx.options);
-    },
-    ...interceptors.request
-);
-
-
-/**
-request.interceptors.response.success.use(
-    ...interceptors.response.success,
-    async (ctx) => {
-        return ctx;
     }
 );
 
-request.interceptors.response.fail.use(
-    ...interceptors.response.fail,
-    async (ctx) => {
-        return Promise.reject(Object.assign({rcode: -1, scode: -1}, ctx));
-    }
-);
-*/
-
+request.interceptors = interceptors;
+request.config = config;
 
 /**
  *  网络请求
