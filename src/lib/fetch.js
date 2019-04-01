@@ -8,8 +8,9 @@ function wxRequest (url, data = {}, options = {}) {
     let request = null;
 
     let pro = new Promise((resolve, reject) => {
+        let _url = url.indexOf('http') === 0 ? url : options.baseUrl + url;
         request = wx.request({
-            url: options.baseUrl + url,
+            url: _url,
             data,
             method: options.method || 'POST',
             dataType: options.dataType || 'json',
@@ -23,6 +24,9 @@ function wxRequest (url, data = {}, options = {}) {
             fail (res) {
                 if (res.errMsg === 'request:fail abort') {
                     res = config.response.abort;
+                }
+                if (res.errMsg === 'request:fail timeout') {
+                    res = config.response.timeout;
                 }
                 return reject(res);
             },

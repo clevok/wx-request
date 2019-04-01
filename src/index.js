@@ -7,8 +7,7 @@ request.interceptors.request.use(
             baseUrl: ctx.options.baseUrl || config.baseUrl,
             method: ctx.options.method || config.method || 'POST',
             header: ctx.options.header || config.header || {},
-            dataType: ctx.options.dataType || config.dataType || 'json',
-            noBaseUrl: false
+            dataType: ctx.options.dataType || config.dataType || 'json'
         }, ctx.options);
     },
     ...interceptors.request,
@@ -32,7 +31,6 @@ request.interceptors.response.fail.use(async (ctx) => {
  *
  * @param {string}  url 请求url
  * @param {object}  data 表单内容
- *
  * @param {object}  options 扩展属性
  * @param {boolean} options.baseUrl
  * @param {string}  [options.method='POST'] method
