@@ -22,24 +22,23 @@ const request = function (url, data = {}, options = {}) {
     let abort = null; // 为了及时抛出请求
 
     let start = new Promise(async (resolve, reject) => {
-        try {
-            await interceptors.request.done(ctx);
-        } catch (error) {
-            return resolve(interceptors.response.fail.done(error));
-        }
+        await interceptors.request.done(ctx).catch(error => {
+            errThrow(error);
+            return resolve(interceptors.response.fail.done(assignRequest(error, ctx)));
+        });
         if (abort) {
-            return resolve(interceptors.response.fail.done(config.response.abort));
+            return resolve(interceptors.response.fail.done(assignRequest(config.response.abort, ctx)));
         }
-        
+
         result = wxRequest(ctx.url, ctx.data, ctx.options);
         try {
             result = await result;
         } catch (error) {
             result = null;
-            return resolve(interceptors.response.fail.done(error));
+            return resolve(interceptors.response.fail.done(assignRequest(error, ctx)));
         }
 
-        return resolve(interceptors.response.success.done(result));
+        return resolve(interceptors.response.success.done(assignRequest(result, ctx)));
     });
     start.abort = async function () {
         abort = true;
@@ -57,5 +56,15 @@ const request = function (url, data = {}, options = {}) {
         return request(url, data, Object.assign(options, {method: type}));
     };
 });
+
+const assignRequest = (obj, ctx) => {
+    return Object.assign(obj, {source: ctx});
+};
+
+const errThrow = (error) => {
+    if (error instanceof Error) {
+        console.error('拦截器异常', error);
+    }
+};
 
 module.exports = request;

@@ -3,13 +3,14 @@ const config = require('./config');
 const interceptors = require('./lib/interceptors');
 
 interceptors.request.use(
-    async(ctx) => {
+    async(ctx, next) => {
         ctx.options = Object.assign({
             baseUrl: ctx.options.baseUrl || config.baseUrl,
             method: ctx.options.method || config.method || 'POST',
             header: ctx.options.header || config.header || {},
             dataType: ctx.options.dataType || config.dataType || 'json'
         }, ctx.options);
+        return next();
     }
 );
 
@@ -18,9 +19,7 @@ request.config = config;
 request.config.set = (params={}) => {
     if (typeof params === 'object') {
         Object.keys(params).forEach((e)=> {
-            if (config[e]) {
-                config[e] = params[e];
-            }
+            config[e] = params[e];
         });
     }
 };

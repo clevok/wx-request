@@ -6,7 +6,6 @@ const loop = new (require('./loop'))(config.maxLink);
  */
 function wxRequest (url, data = {}, options = {}) {
     let request = null;
-
     let pro = new Promise((resolve, reject) => {
         let _url = url.indexOf('http') === 0 ? url : options.baseUrl + url;
         request = wx.request({
@@ -16,9 +15,6 @@ function wxRequest (url, data = {}, options = {}) {
             dataType: options.dataType || 'json',
             header: options.header || {},
             success (res) {
-                res.source = {
-                    url, data, options
-                };
                 if (res.statusCode !== 200) {
                     return reject(res);
                 }
