@@ -1,5 +1,6 @@
 module.exports = {
     baseUrl: 'https://fhdowx.xyy001.com',
+    subUrl: {},
     header: {
         'content-type': 'application/x-www-form-urlencoded'
     },

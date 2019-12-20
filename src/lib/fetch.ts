@@ -1,10 +1,12 @@
-const config = require('../config');
-const loop = new (require('./loop'))(config.maxLink);
+import { Config } from '../config';
+import Loop from './loop';
+const loop = new Loop(Config.maxLink);
+
 
 /**
  * 请求
  */
-function wxRequest (url, data = {}, options = {}) {
+function _wxRequest (url: string, data = {}, options = {}) {
     let request = null;
     let pro = new Promise((resolve, reject) => {
         let _url = url.indexOf('http') === 0 ? url : options.baseUrl + url;
@@ -23,14 +25,11 @@ function wxRequest (url, data = {}, options = {}) {
             fail (res) {
                 res.statusCode = 0;
                 if (res.errMsg === 'request:fail abort') {
-                    res = config.response.abort;
+                    res = Config.response.abort;
                 }
                 if (res.errMsg === 'request:fail timeout') {
-                    res = config.response.timeout;
+                    res = Config.response.timeout;
                 }
-                res.source = {
-                    url, data, options
-                };
                 return reject(res);
             },
             complete () {
@@ -51,13 +50,13 @@ function wxRequest (url, data = {}, options = {}) {
 /**
  * 在请求基础上封装, 用于控制请求数量
  */
-function LoopRequest () {
+function LoopRequest (...params: any[]) {
     let result = null;
     let request = null;
 
     let pro = new Promise((resolve, reject) => {
         result = loop.put(async (finsh) => {
-            request = wxRequest(...arguments);
+            request = _wxRequest(...params);
             try {
                 request = await request;
             } catch (error) {
@@ -69,7 +68,7 @@ function LoopRequest () {
         });
         result.remove = () => {
             result.abort();
-            return reject(config.response.abort);
+            return reject(Config.response.abort);
         };
     });
     pro.abort = () => {
@@ -85,4 +84,4 @@ function LoopRequest () {
     return pro;
 }
 
-exports.wxRequest = LoopRequest;
+export const wxRequest = LoopRequest;

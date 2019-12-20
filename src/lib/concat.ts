@@ -2,7 +2,7 @@
  * @file simpleKoa application对象
  */
 
-class Connect {
+export default class Connect {
     /**
      * 构造函数
      */
@@ -14,8 +14,8 @@ class Connect {
      * 中间件挂载
      * @param {Function} middleware 中间件函数
      */
-    use () {
-        this.middlewares.push(...arguments);
+    use (...params: any[]) {
+        this.middlewares.push(...params);
     }
 
     /**
@@ -44,10 +44,7 @@ class Connect {
         };
     }
 
-    done() {
-        return this.compose()(arguments);
+    done(...params: any[]) {
+        return this.compose()(params);
     }
 }
-
-module.exports = Connect;
-export default Connect;
