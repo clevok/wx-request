@@ -1,24 +1,19 @@
 {
-  "name": "@clevok/request",
-  "version": "0.0.3",
-  "description": "请求",
-  "main": "./lib/index.js",
-  "repository": {
-    "type": "git",
-    "url": "git://192.168.0.46:3000/clevo/wx-request"
+  "name": "wx-request-v2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@clevok/message": "0.0.1"
-  },
   "devDependencies": {
-    "@babel/core": "^7.7.2",
-    "@types/node": "^12.12.7",
-    "babel-core": "^6.26.3",
-    "babel-loader": "^8.0.6",
-    "node": "^13.1.0",
-    "webpack": "^4.41.2",
-    "webpack-cli": "^3.3.10"
+    "@types/wechat-miniprogram": "^2.9.4"
+  },
+  "dependencies": {
+    "@clevok/compose": "0.0.1",
+    "@clevok/task-queue": "0.0.1",
+    "koa-compose": "^4.1.0"
   }
 }

@@ -1,82 +1,102 @@
-import { wxRequest } from './fetch';
-import {Interceptors} from './interceptors';
-import { Config } from '../config';
+import {Loop, Queue} from '@clevok/task-queue';
+import { Config } from '../depend/depend.config';
+import { IRequestOptions } from '../interface/interface.config';
+import { IResponseFail } from '../interface/interface.request';
+
+
+/** 队列 */
+const eventLoop = new Queue().addEventListener(new Loop(Config.maxLink))
+
 
 /**
- *  网络请求
- * @param {string}  url 请求url
- * @param {object}  data 表单内容
- * @param {object}  options 扩展属性
- * @param {string}  [options.method='POST'] method
- * @param {boolean} [options.noBaseUrl=false] 不需要baseUrl
- * @returns {Promise<{data:any,rcode:number,scode:number,nowTime:number,status:{[propName: string]: any}}>}
+ * statusCode 不为 200 都是失败
  */
-export default function Request (url: string, data?: {
-    [propName: string]: any;
-}, options?: {
-    /**基础url */
-    baseUrl?: string;
-    /**发送类型 */
-    method?: 'POST' | 'GET';
-    /**不需要加baseUrl? */
-    noBaseUrl?: boolean;
-}): Promise<{
-    data: any;
-    rcode: number;
-    scode: number;
-    nowTime: number;
-    status: {
-        [propName: string]: any;
-    };
-}> {
-    let ctx = {
-        url, data: data || {}, options: options || {}
-    };
-    let result = null;
-    let abort = null; // 为了及时抛出请求
+export const WxRequest = (
 
-    let start = new Promise(async (resolve, reject) => {
-        await Interceptors.request.done(ctx).catch(error => {
-            errThrow(error);
-            return resolve(Interceptors.response.fail.done(assignRequest(error, ctx)));
-        });
-        if (abort) {
-            return resolve(Interceptors.response.fail.done(assignRequest(Config.response.abort, ctx)));
+        /**
+         * 请求数据
+         */
+        ctx: {url: string, data: string|Object, options: IRequestOptions},
+
+        /**
+         * 成功回调
+         */
+        success: (params: WechatMiniprogram.RequestSuccessCallbackResult) => void,
+
+        /**
+         * 失败回调
+         */
+        fail: (params: IResponseFail) => void
+
+    ) => {
+
+    let {url, data, options} = ctx;
+    let request: WechatMiniprogram.RequestTask | null = null
+
+    let requestLoop = eventLoop.push({
+
+        abortTime: ctx.options.abortTime,
+
+        abort () {
+            return fail(Config.response.abort);
+        },
+
+        success (finshed) {
+
+            /**
+             * 补全url
+             */
+            if (url.indexOf('http') !== 0) {
+                url = options.baseUrl + url;
+            }
+
+            request = wx.request({
+                url: url,
+                data: data || '',
+                header: options.header || {},
+                method: options.method || 'GET',
+                dataType: options.dataType || 'json',
+                responseType: options.responseType || 'text',
+                success (res) {
+                    if (res.statusCode !== 200) {
+                        return fail(Object.assign(res, {
+                            rcode: -1,
+                            scode: -1
+                        }));
+                    }
+                    return success(res);
+                },
+                fail (res) {
+                    let callcack;
+                    if (res.errMsg === 'request:fail abort') {
+                        callcack = Config.response.abort;
+                    } else if (res.errMsg === 'request:fail timeout') {
+                        callcack = Config.response.timeout;
+                    } else {
+                        callcack = {
+                            rcode: -1,
+                            scode: -1,
+                            statusCode: 500,
+                            errMsg: res.errMsg
+                        };
+                    }
+                    return fail(callcack);
+                },
+                complete () {
+                    finshed();
+                }
+            });
         }
-
-        result = wxRequest(ctx.url, ctx.data, ctx.options);
-        try {
-            result = await result;
-        } catch (error) {
-            result = null;
-            return resolve(Interceptors.response.fail.done(assignRequest(error, ctx)));
-        }
-
-        return resolve(Interceptors.response.success.done(assignRequest(result, ctx)));
     });
-    start.abort = async function () {
-        abort = true;
-        if (!result) return;
-        if (typeof result.abort === 'function') {
-            result.abort();
-        }
-        result = null;
-    };
-    return start;
-};
 
-['get', 'put', 'post', 'delete'].forEach(type => {
-    Request[type] = (url, data, options = {}) => {
-        return Request(url, data, Object.assign(options, {method: type}));
-    };
-});
 
-const assignRequest = (obj, ctx) => {
-    return Object.assign(obj, {source: ctx});
-};
-
-const errThrow = (error) => {
-    if (error instanceof Error) {
-        console.error('拦截器异常', error);
+    /***
+     * 重写 abort 方法
+     */
+    const abort = requestLoop.abort;
+    requestLoop.abort = () => {
+        abort && abort();
+        request && request.abort();
     }
-};
+    return requestLoop;
+}
