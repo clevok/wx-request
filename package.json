@@ -2,7 +2,7 @@
   "name": "@clevok/request",
   "version": "0.1.0",
   "description": "请求",
-  "main": "index.js",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
