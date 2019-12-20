@@ -7,7 +7,7 @@ export const RequestOptions: IRequestOptions = {
     /** 基本请求url */
     baseUrl: 'https://fhdowx.xyy001.com',
 
-    header: {},
+    header: {'content-type': 'application/x-www-form-urlencoded'},
 
     method: 'POST',
 
@@ -34,10 +34,10 @@ export const Config: IConfig = {
 
     response: {
         /** 取消请求的回调对象 */
-        abort: {errMsg: 'request:fail abort', rcode: -1, scode: -1000, statusCode: 500 },
+        abort: {errMsg: 'request:fail abort', rcode: -1, scode: -1000, statusCode: 0 },
 
         /** 请求超时 */
-        timeout: {errMsg: 'request:fail timeout', rcode: -1, scode: -1001, statusCode: 500 }
+        timeout: {errMsg: 'request:fail timeout', rcode: -1, scode: -1001, statusCode: 0 }
     }
 }
 
