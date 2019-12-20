@@ -1,6 +1,7 @@
 /// <reference types="wechat-miniprogram" />
-export { Interceptors } from './depend/depend.interceptors';
 export { Config, SetConfig } from './depend/depend.config';
+export { Interceptors } from './depend/depend.interceptors';
+export { IMiddle } from './depend/depend.interceptors';
 import { IRequestOptions } from './interface/interface.config';
 import { IPro } from './interface/interface.request';
 /**

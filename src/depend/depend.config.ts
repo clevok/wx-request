@@ -43,11 +43,11 @@ export const Config: IConfig = {
 
 interface ISetConfig {
     /** 请求url */
-    baseUrl: string,
+    baseUrl?: string,
 
-    header: Object,
+    header?: Object,
 
-    method: 'OPTIONS'
+    method?: 'OPTIONS'
             | 'GET'
             | 'HEAD'
             | 'POST'
@@ -55,28 +55,32 @@ interface ISetConfig {
             | 'DELETE'
             | 'TRACE'
             | 'CONNECT',
-    dataType: 'json',
+    dataType?: 'json',
 
-    responseType: 'text' | 'arraybuffer',
+    responseType?: 'text' | 'arraybuffer',
 
     /** 超时事件,不能超过app配置的network时间 */
-    abortTime: number,
-
-    /** 最大发起请求数 */
-    maxLink: number;
+    abortTime?: number,
 
     /** baseUrl 简称 */
-    subUrl: {
+    subUrl?: {
         [urlKey: string]: string
     },
 
-    response: {
+    response?: {
         /** 取消请求的回调对象 */
-        abort: {errMsg: string, rcode: number, scode: number, statusCode: number },
+        abort?: {errMsg: string, rcode: number, scode: number, statusCode: number },
         /** 请求超时 */
-        timeout: {errMsg: string, rcode: number, scode: number, statusCode: number}
+        timeout?: {errMsg: string, rcode: number, scode: number, statusCode: number}
     }
 }
+
+
+/**
+ * 
+ * 配置设置
+ * @param params 
+ */
 export const SetConfig = (params: ISetConfig) => {
     Object.keys(params).forEach(key => {
         if (key in RequestOptions) {

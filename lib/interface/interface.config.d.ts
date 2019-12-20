@@ -18,8 +18,6 @@ export interface IRequestOptions {
 export interface IConfig {
     /** 最大发起请求数 */
     maxLink: number;
-    /** 请求url */
-    baseUrl: string;
     /** baseUrl 简称 */
     subUrl: {
         [urlKey: string]: string;
